@@ -7,11 +7,20 @@ class App extends React.Component {
   state = { images: [] };
 
   onSearchSubmit = async term => {
-    const response = await unsplash.get('/search/photos', {
-      params: { query: term }
-    });
+    const response = [];
+    const pages = [1, 2, 3];
+    for (let page of pages) {
+      let imgs = await unsplash.get('/search/photos', {
+        params: { query: term, page: page }
+      });
 
-    this.setState({ images: response.data.results });
+      response.push(...imgs.data.results);
+    }
+    // const response = await unsplash.get('/search/photos', {
+    //   params: { query: term, page: page }
+    // });
+
+    this.setState({ images: response });
   };
 
   render() {
